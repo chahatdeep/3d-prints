@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.blend1
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Original MakerWorld downloads: kept locally for the build scripts, never committed (Epiq3D license)
+home-planter-lodret-system/Original downloads/
