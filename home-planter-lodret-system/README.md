@@ -155,7 +155,7 @@ Based on the designer's profile: 0.2 mm layers, 3 walls, 15% grid infill, suppor
 | Rod hangers, knobs, wall mounts | **PETG** if available (else PLA), **5–6 walls, 40%+ infill** |
 | Drip trays, wick feet | Default |
 
-The generated pot STLs are large (100–220 MB) because of the surface pattern. They load slowly but slice fine; `build_sizes.py` writes compressed 3MFs instead.
+The scripts simplify every mesh to within 0.05 mm of full detail (invisible at a 0.2 mm layer) and keep it watertight, so a pot is 80k–1M triangles (1–10 MB per 3MF). `shrink.py` does the same for existing files, and `verify_all.py` checks every file is watertight and that the rail joint matches the original.
 
 ## Estimated print times (0.4 mm nozzle, 0.2 mm layers)
 

@@ -19,6 +19,7 @@ import manifold3d as mf
 AXIS_Z = -3.25
 RAIL = dict(x0=-11.2, x1=11.2, y0=-34, y1=21, z0=48.5, z1=58)
 RAIL_TOP, CLEAR, BLOCK_HALF, INNER_TOP = 56.77, 7.85, 14.5, 47.4
+SIMPLIFY_MM = 0.05
 ORDER = ['original', 'rattan', 'rope', 'reeded', 'dunes', 'mudcloth', 'berber', 'petals', 'herringbone',
          'mountains', 'arches', 'slats', 'sunburst', 'ripples', 'fern', 'triptych']
 
@@ -90,10 +91,14 @@ def build(task):
     r = rail.translate([0, dy, dz])
     z_top, z_bot = RAIL['z0'] + dz + 0.3, INNER_TOP * S + 0.5
     column = mf.Manifold.extrude(r.slice(z_top), z_top - z_bot).translate([0, 0, z_bot])
-    pot = to_tm(big + r + column)
+    # simplify(0.05): drop vertices only where the surface stays within 0.05 mm (a quarter of a
+    # 0.2 mm layer); keeps the mesh watertight and cuts it ~5-30x
+    pot = to_tm((big + r + column).simplify(SIMPLIFY_MM))
 
     tray.apply_scale(S)
+    tray = to_tm(to_mf(tray).simplify(SIMPLIFY_MM))
     foot = trimesh.load(f'{W}/planter/2_foot__foot.stl', process=True); foot.apply_scale(S)
+    foot = to_tm(to_mf(foot).simplify(SIMPLIFY_MM))
 
     def lay(m, oid):
         m = m.copy(); m.apply_transform(plate_rotation(PL, oid)); m.apply_translation(-m.bounds[0]); return m

@@ -87,8 +87,10 @@ column = mf.Manifold.extrude(rail.slice(z_top), z_top - z_bot).translate([0, 0, 
 pot_s = big + rail + column
 print(f'scale {S}: wings at z={wings:.2f}, rail top at z={RAIL_TOP + dz:.2f} (clearance {CLEAR} mm as original)')
 
-save(to_tm(pot_s), f'Brynhild_pot_{PCT}pct_LODRET-rail.stl', plate_rotation(9))
+# simplify(0.05): surface stays within 0.05 mm of the full-detail mesh, stays watertight, ~5-30x smaller
+SIMPLIFY_MM = 0.05
+save(to_tm(pot_s.simplify(SIMPLIFY_MM)), f'Brynhild_pot_{PCT}pct_LODRET-rail.stl', plate_rotation(9))
 tray = trimesh.load(os.path.join(W, 'planter/14_Bottom__Bottom.stl'), process=True); tray.apply_scale(S)
-save(tray, f'Brynhild_drip-tray_{PCT}pct.stl', plate_rotation(14))
+save(to_tm(to_mf(tray).simplify(SIMPLIFY_MM)), f'Brynhild_drip-tray_{PCT}pct.stl', plate_rotation(14))
 foot = trimesh.load(os.path.join(W, 'planter/2_foot__foot.stl'), process=True); foot.apply_scale(S)
-save(foot, f'Brynhild_wick-foot_{PCT}pct_print-3.stl', plate_rotation(2))
+save(to_tm(to_mf(foot).simplify(SIMPLIFY_MM)), f'Brynhild_wick-foot_{PCT}pct_print-3.stl', plate_rotation(2))
